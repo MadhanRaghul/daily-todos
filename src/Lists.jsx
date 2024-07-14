@@ -4,81 +4,80 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
 const Lists = () => {
-  const [todos, setTodos] = useState([])
-  const [task, setTask] = useState('')
-  const navigate = useNavigate()
-  const API_URL = `http://localhost:${import.meta.env.VITE_API}`
+  const [todos, setTodos] = useState([]);
+  const [task, setTask] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTodos()
-  }, [])
+    fetchTodos();
+  }, []);
 
   const fetchTodos = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const decodedToken = jwtDecode(token)
-      const userId = decodedToken.id
-  
-      const response = await axios.get(`${API_URL}/todos?userId=${userId}`, {
+      const token = localStorage.getItem('token');
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/todos?userId=${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setTodos(response.data)
+      });
+      setTodos(response.data);
     } catch (error) {
-      console.error('Fetch Todos Error:', error)
+      console.error('Fetch Todos Error:', error);
     }
-  }
+  };
 
   const addTask = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const token = localStorage.getItem('token')
-      const decodedToken = jwtDecode(token)
-      const userId = decodedToken.id
-  
-      const response = await axios.post(`${API_URL}/todos`, {
+      const token = localStorage.getItem('token');
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.id;
+
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/todos`, {
         task,
         completed: false,
-        userId: userId
+        userId
       }, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setTodos([...todos, response.data])
-      setTask('')
+      });
+      setTodos([...todos, response.data]);
+      setTask('');
     } catch (error) {
-      console.error('Add Task Error:', error)
+      console.error('Add Task Error:', error);
     }
-  }
+  };
 
   const toggleComplete = async (id, completed) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.patch(`${API_URL}/todos/${id}`, {
+      const token = localStorage.getItem('token');
+      await axios.patch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
         completed: !completed
       }, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo))
+      });
+      setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !completed } : todo));
     } catch (error) {
-      console.error('Toggle Complete Error:', error)
+      console.error('Toggle Complete Error:', error);
     }
-  }
+  };
 
   const deleteTask = async (id) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.delete(`${API_URL}/todos/${id}`, {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setTodos(todos.filter(todo => todo.id !== id))
+      });
+      setTodos(todos.filter(todo => todo.id !== id));
     } catch (error) {
-      console.error('Delete Task Error:', error)
+      console.error('Delete Task Error:', error);
     }
-  }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-  }
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

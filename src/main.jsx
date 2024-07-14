@@ -8,3 +8,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>
 );
+
+/* 
+react router
+global state
+useParam
+Suspence
+list all todos
+view todo by id */
